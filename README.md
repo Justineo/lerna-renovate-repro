@@ -24,3 +24,30 @@ Renovate upgrades `nanoid` to latest patch version and only necessary changes ar
 ## Actual behavior
 
 Renovate upgrades `nanoid` to latest patch version correctly for `my-bar` but for `my-foo` the `package-lock.json` is not correctly formatted by Prettier.
+
+## Renovate config
+
+```json
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "repositories": ["Justineo/lerna-renovate-repro"],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["*"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["nanoid"],
+      "matchBaseBranches": ["master"],
+      "enabled": true
+    }
+  ],
+  "rangeStrategy": "bump",
+  "allowedPostUpgradeCommands": ["prettier"],
+  "postUpgradeTasks": {
+    "commands": ["npx prettier --write packages/**/package-lock.json"],
+    "fileFilters": ["packages/**/package-lock.json"],
+    "executionMode": "update"
+  }
+}
+```
